@@ -49,29 +49,35 @@ function App() {
   }, [])
 
   useEffect(() => {
-    // Create floating hearts with mobile-first approach
+    // Create floating hearts with mobile-first approach - reduced frequency
     const interval = setInterval(() => {
-      setHearts(prev => [...prev, {
-        id: Date.now(),
-        x: Math.random() * screenDimensions.width,
-        y: screenDimensions.height + 50,
-        size: Math.random() * 15 + 8, // Smaller hearts for mobile
-        speed: Math.random() * 1.5 + 0.8, // Slower for mobile
-        type: 'regular'
-      }])
-    }, 600) // Slower generation for mobile
+      setHearts(prev => {
+        // Limit total hearts to prevent performance issues
+        if (prev.length >= 20) {
+          return prev
+        }
+        return [...prev, {
+          id: Date.now(),
+          x: Math.random() * screenDimensions.width,
+          y: screenDimensions.height + 50,
+          size: Math.random() * 15 + 8, // Smaller hearts for mobile
+          speed: Math.random() * 1.5 + 0.8, // Slower for mobile
+          type: 'regular'
+        }]
+      })
+    }, 1000) // Slower generation to reduce blinking
 
     return () => clearInterval(interval)
   }, [screenDimensions])
 
   useEffect(() => {
-    // Animate hearts
+    // Animate hearts - improved performance
     const animation = setInterval(() => {
       setHearts(prev => prev.map(heart => ({
         ...heart,
         y: heart.y - heart.speed
       })).filter(heart => heart.y > -50))
-    }, 50)
+    }, 100) // Slower animation for better performance
 
     return () => clearInterval(animation)
   }, [])
@@ -119,16 +125,16 @@ function App() {
   }
 
   const handleHateButtonClick = () => {
-    // Create a burst of hearts around the button
-    const burstHearts = Array.from({ length: 15 }, (_, i) => ({
+    // Create a burst of hearts around the button - reduced count
+    const burstHearts = Array.from({ length: 8 }, (_, i) => ({
       id: `burst-${Date.now()}-${i}`,
-      x: (screenDimensions.width / 2) + (Math.random() - 0.5) * 200, // Around center
-      y: screenDimensions.height / 2 + (Math.random() - 0.5) * 200, // Around center
-      size: Math.random() * 30 + 20, // Various sizes
-      speed: Math.random() * 4 + 2, // Faster burst
+      x: (screenDimensions.width / 2) + (Math.random() - 0.5) * 150, // Smaller spread
+      y: screenDimensions.height / 2 + (Math.random() - 0.5) * 150, // Smaller spread
+      size: Math.random() * 25 + 15, // Smaller sizes
+      speed: Math.random() * 3 + 1.5, // Slower speed
       type: 'burst',
       rotation: Math.random() * 360,
-      angle: (i / 15) * 360 // Spread in all directions
+      angle: (i / 8) * 360 // Spread in all directions
     }))
     
     setHearts(prev => [...prev, ...burstHearts])
@@ -156,9 +162,9 @@ function App() {
             left: heart.x,
             top: heart.y,
             fontSize: heart.size,
-            animationDuration: `${heart.speed * 2}s`,
+            animationDuration: `${heart.speed * 3}s`, // Slower animation
             transform: heart.type === 'big-red' ? `rotate(${heart.rotation}deg)` : 
-                       heart.type === 'burst' ? `rotate(${heart.rotation}deg) translate(${Math.cos(heart.angle * Math.PI / 180) * 100}px, ${Math.sin(heart.angle * Math.PI / 180) * 100}px)` : 'none'
+                       heart.type === 'burst' ? `rotate(${heart.rotation}deg) translate(${Math.cos(heart.angle * Math.PI / 180) * 80}px, ${Math.sin(heart.angle * Math.PI / 180) * 80}px)` : 'none'
           }}
         >
           {heart.type === 'big-red' ? '❤️' : heart.type === 'burst' ? '💖' : '💖'}
