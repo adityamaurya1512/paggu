@@ -57,6 +57,30 @@ body {
   transform-origin: center;
 }
 
+/* Burst hearts special styling */
+.burst-heart {
+  z-index: 15;
+  animation: burstHeartFloat 3s ease-out forwards;
+  opacity: 1;
+  filter: drop-shadow(0 0 15px rgba(255, 107, 157, 0.8)) drop-shadow(0 0 30px rgba(255, 107, 157, 0.6));
+  transform-origin: center;
+}
+
+@keyframes burstHeartFloat {
+  0% {
+    transform: scale(0) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2) rotate(180deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0) rotate(360deg);
+    opacity: 0;
+  }
+}
+
 @keyframes bigRedHeartFloat {
   0% {
     transform: translateY(0) scale(1) rotate(0deg);
@@ -301,6 +325,41 @@ body {
   }
 }
 
+/* Hate message styling */
+.hate-message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(45deg, #ff6b9d, #e84393);
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 25px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 10px 30px rgba(255, 107, 157, 0.6);
+  z-index: 200;
+  animation: hateMessagePop 0.5s ease-out;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+@keyframes hateMessagePop {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
 /* Decorative sparkles */
 .decorations {
   position: absolute;
@@ -411,6 +470,11 @@ body {
     min-width: 180px;
   }
   
+  .hate-message {
+    font-size: 1.4rem;
+    padding: 1.2rem 2.5rem;
+  }
+  
   .title-container {
     margin-bottom: 2rem;
   }
@@ -474,6 +538,11 @@ body {
     min-width: 200px;
   }
   
+  .hate-message {
+    font-size: 1.6rem;
+    padding: 1.5rem 3rem;
+  }
+  
   .title-container {
     margin-bottom: 3rem;
   }
@@ -517,6 +586,11 @@ body {
     padding: 1rem 2rem;
   }
   
+  .hate-message {
+    font-size: 1.8rem;
+    padding: 1.8rem 3.5rem;
+  }
+  
   .big-red-heart {
     font-size: 80px !important;
   }
@@ -552,6 +626,11 @@ body {
     font-size: 0.8rem;
     padding: 0.6rem 1rem;
     min-width: 140px;
+  }
+  
+  .hate-message {
+    font-size: 1rem;
+    padding: 0.8rem 1.5rem;
   }
   
   .content {
@@ -596,6 +675,11 @@ body {
     padding: 0.8rem;
   }
   
+  .hate-message {
+    font-size: 1.1rem;
+    padding: 0.8rem 1.8rem;
+  }
+  
   .big-red-heart {
     font-size: 40px !important;
   }
@@ -609,6 +693,10 @@ body {
   
   .big-red-heart {
     filter: drop-shadow(0 0 25px rgba(255, 0, 0, 0.9)) drop-shadow(0 0 50px rgba(255, 0, 0, 0.5));
+  }
+  
+  .burst-heart {
+    filter: drop-shadow(0 0 20px rgba(255, 107, 157, 0.9)) drop-shadow(0 0 40px rgba(255, 107, 157, 0.7));
   }
   
   .message,
@@ -629,6 +717,11 @@ body {
   }
   
   .big-red-heart {
+    animation: none;
+    opacity: 0.8;
+  }
+  
+  .burst-heart {
     animation: none;
     opacity: 0.8;
   }
@@ -662,6 +755,10 @@ body {
   
   .hate-button:hover {
     transform: none;
+  }
+  
+  .hate-message {
+    animation: none;
   }
 }
 

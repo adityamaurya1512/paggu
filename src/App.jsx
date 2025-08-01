@@ -7,9 +7,8 @@ function App() {
   const [currentMessage, setCurrentMessage] = useState(0)
   const [showSpecialMessage, setShowSpecialMessage] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
-  const [hateButtonPosition, setHateButtonPosition] = useState({ x: 0, y: 0 })
   const [screenDimensions, setScreenDimensions] = useState({ width: 0, height: 0 })
-  const [hateButtonMoved, setHateButtonMoved] = useState(false)
+  const [showHateMessage, setShowHateMessage] = useState(false)
 
   const messages = [
     "Happy Girlfriend Day, my love! 💕",
@@ -119,38 +118,28 @@ function App() {
     setHearts(prev => [...prev, ...bigRedHearts])
   }
 
-  const handleHateButtonHover = () => {
-    // Only move on hover for desktop, not on mobile touch
-    if (!isMobile) {
-      moveHateButton()
-    }
-  }
-
-  const handleHateButtonTouch = () => {
-    // Add delay for mobile to make it more playful
+  const handleHateButtonClick = () => {
+    // Create a burst of hearts around the button
+    const burstHearts = Array.from({ length: 15 }, (_, i) => ({
+      id: `burst-${Date.now()}-${i}`,
+      x: (screenDimensions.width / 2) + (Math.random() - 0.5) * 200, // Around center
+      y: screenDimensions.height / 2 + (Math.random() - 0.5) * 200, // Around center
+      size: Math.random() * 30 + 20, // Various sizes
+      speed: Math.random() * 4 + 2, // Faster burst
+      type: 'burst',
+      rotation: Math.random() * 360,
+      angle: (i / 15) * 360 // Spread in all directions
+    }))
+    
+    setHearts(prev => [...prev, ...burstHearts])
+    
+    // Show the sweet message
+    setShowHateMessage(true)
+    
+    // Hide the message after 3 seconds
     setTimeout(() => {
-      moveHateButton()
-    }, 300)
-  }
-
-  const moveHateButton = () => {
-    // Calculate safe boundaries for mobile
-    const buttonWidth = 160 // Approximate button width
-    const buttonHeight = 50 // Approximate button height
-    const padding = 20 // Safe padding from edges
-    
-    const maxX = screenDimensions.width - buttonWidth - padding
-    const maxY = screenDimensions.height - buttonHeight - padding
-    
-    // Ensure button stays within screen bounds
-    const newX = Math.max(padding, Math.min(maxX, Math.random() * maxX))
-    const newY = Math.max(padding, Math.min(maxY, Math.random() * maxY))
-    
-    setHateButtonPosition({
-      x: newX,
-      y: newY
-    })
-    setHateButtonMoved(true)
+      setShowHateMessage(false)
+    }, 3000)
   }
 
   return (
@@ -162,16 +151,17 @@ function App() {
       {hearts.map(heart => (
         <div
           key={heart.id}
-          className={`heart ${heart.type === 'big-red' ? 'big-red-heart' : ''}`}
+          className={`heart ${heart.type === 'big-red' ? 'big-red-heart' : ''} ${heart.type === 'burst' ? 'burst-heart' : ''}`}
           style={{
             left: heart.x,
             top: heart.y,
             fontSize: heart.size,
             animationDuration: `${heart.speed * 2}s`,
-            transform: heart.type === 'big-red' ? `rotate(${heart.rotation}deg)` : 'none'
+            transform: heart.type === 'big-red' ? `rotate(${heart.rotation}deg)` : 
+                       heart.type === 'burst' ? `rotate(${heart.rotation}deg) translate(${Math.cos(heart.angle * Math.PI / 180) * 100}px, ${Math.sin(heart.angle * Math.PI / 180) * 100}px)` : 'none'
           }}
         >
-          {heart.type === 'big-red' ? '❤️' : '💖'}
+          {heart.type === 'big-red' ? '❤️' : heart.type === 'burst' ? '💖' : '💖'}
         </div>
       ))}
 
@@ -219,22 +209,23 @@ function App() {
               Click for more love! 💕
             </button>
             
-            {/* Hate Me button positioned beside love button initially */}
+            {/* Hate Me button - now stays in place */}
             <button 
               className="hate-button"
-              onMouseEnter={handleHateButtonHover}
-              onTouchStart={handleHateButtonTouch}
-              style={{
-                left: hateButtonPosition.x || 'auto',
-                top: hateButtonPosition.y || 'auto',
-                position: hateButtonPosition.x ? 'fixed' : 'static'
-              }}
+              onClick={handleHateButtonClick}
               aria-label="Hate me button"
             >
               Hate Me 😢
             </button>
           </div>
         </div>
+
+        {/* Hate button message */}
+        {showHateMessage && (
+          <div className="hate-message">
+            Can't hate me! I love you too much! 💕
+          </div>
+        )}
 
         {/* Decorative elements */}
         <div className="decorations">
